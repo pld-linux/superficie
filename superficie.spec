@@ -1,4 +1,5 @@
 Summary:	3D objects visualizer
+Summary(pl):	Wizualizer obiektów 3D
 Name:		superficie
 Version:	0.7.2
 Release:	1
@@ -17,6 +18,11 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Superficie is a small program that allows to visualize 3D surfaces and
 other objects, and to manipulate them. It allows to rotate, to move
 away, to show illumination, etc. on the surface at issue.
+
+%description -l pl
+Superficie to niewielki program pozwalaj±cy wizualizowaæ powierzchnie
+3D i inne obiekty, oraz manipulowaæ nimi. Pozwala obracaæ, przesuwaæ,
+pokazywaæ o¶wietlenie itp. na powierzchni.
 
 %prep
 %setup -q
@@ -41,7 +47,6 @@ rm -rf $RPM_BUILD_ROOT
 %files 
 %defattr(644,root,root,755)
 %doc *.gz doc/*.gz
-
 %attr(755,root,root) %{_bindir}/*
 %{_applnkdir}/Graphics/superficie.desktop
 %{_datadir}/gnome/help/superficie

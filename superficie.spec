@@ -5,8 +5,6 @@ Version:	0.7.2
 Release:	1
 License:	GPL
 Group:		Applications/Graphics
-Group(de):	Applikationen/Grafik
-Group(pl):	Aplikacje/Grafika
 Source0:	http://www.linuxsupportline.com/~superficie/%{name}-%{version}.tar.gz
 BuildRequires:	gnome-libs-devel >= 1.0.0
 URL:		http://www.linuxsupportline.com/~superficie/

@@ -6,6 +6,7 @@ Release:	1
 License:	GPL
 Group:		Applications/Graphics
 Source0:	http://www.linuxsupportline.com/~superficie/%{name}-%{version}.tar.gz
+# Source0-md5:	0ffb7c7d6dd42d975ef2effdc504b354
 BuildRequires:	gnome-libs-devel >= 1.0.0
 URL:		http://www.linuxsupportline.com/~superficie/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)

@@ -7,10 +7,17 @@ License:	GPL
 Group:		Applications/Graphics
 Source0:	http://dl.sourceforge.net/superficie/%{name}-%{version}.tar.gz
 # Source0-md5:	e204fcc098096520d9384ef9f6f4d119
-BuildRequires:	gnome-libs-devel >= 1.0.0
+Patch0:		%{name}-gcc3.patch
+Patch1:		%{name}-amfix.patch
 URL:		http://superficie.sourceforge.net/
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	glut-devel
+BuildRequires:	gnome-libs-devel >= 1.0.0
+BuildRequires:	gtkglarea1-devel
+BuildRequires:	libstdc++-devel
+BuildRequires:	libtool
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
 
 %description
 Superficie is a small program that allows to visualize 3D surfaces and
@@ -24,27 +31,37 @@ pokazywaæ o¶wietlenie itp. na powierzchni.
 
 %prep
 %setup -q
+%patch0 -p1
+%patch1 -p1
 
 %build
-CXXFLAGS="%{rpmcflags} -fpermissive -fno-exceptions"
+%{__libtoolize}
+%{__aclocal} -I macros
+%{__autoconf}
+%{__autoheader}
+%{__automake}
+# ENABLE_NLS is workaround for gnome/libstdc++ conflict
+CXXFLAGS="%{rpmcflags} -fpermissive -fno-exceptions -DENABLE_NLS"
 %configure
 
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-rpm -rf $RPM_BUILD_ROOT
 
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT \
+	Graphicsdir=%{_applnkdir}/Graphics
+
+%find_lang %{name} --with-gnome
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files
+%files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc README README.save_eps NEWS AUTHORS ChangeLog doc/data.ps
 %attr(755,root,root) %{_bindir}/*
 %{_applnkdir}/Graphics/superficie.desktop
-%{_datadir}/gnome/help/superficie
 %{_pixmapsdir}/*
 %{_datadir}/superficie

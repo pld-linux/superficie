@@ -5,10 +5,10 @@ Version:	0.7.2
 Release:	1
 License:	GPL
 Group:		Applications/Graphics
-Source0:	http://www.linuxsupportline.com/~superficie/%{name}-%{version}.tar.gz
-# Source0-md5:	0ffb7c7d6dd42d975ef2effdc504b354
+Source0:	http://dl.sourceforge.net/superficie/%{name}-%{version}.tar.gz
+# Source0-md5:	e204fcc098096520d9384ef9f6f4d119
 BuildRequires:	gnome-libs-devel >= 1.0.0
-URL:		http://www.linuxsupportline.com/~superficie/
+URL:		http://superficie.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 

@@ -12,7 +12,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_prefix		/usr/X11R6
 
-%description 
+%description
 Superficie is a small program that allows to visualize 3D surfaces and
 other objects, and to manipulate them. It allows to rotate, to move
 away, to show illumination, etc. on the surface at issue.
@@ -42,7 +42,7 @@ gzip -9nf README README.save_eps NEWS AUTHORS ChangeLog doc/data.ps
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files 
+%files
 %defattr(644,root,root,755)
 %doc *.gz doc/*.gz
 %attr(755,root,root) %{_bindir}/*

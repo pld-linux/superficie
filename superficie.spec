@@ -31,7 +31,7 @@ make
 %install
 rpm -rf $RPM_BUILD_ROOT
 
-make install DESTDIR=$RPM_BUILD_ROOT
+%{__make} install DESTDIR=$RPM_BUILD_ROOT
 
 gzip -9nf README README.save_eps NEWS AUTHORS ChangeLog doc/data.ps
 

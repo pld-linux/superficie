@@ -10,7 +10,6 @@ BuildRequires:	gnome-libs-devel >= 1.0.0
 URL:		http://www.linuxsupportline.com/~superficie/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_prefix		/usr/X11R6
 
 %description
 Superficie is a small program that allows to visualize 3D surfaces and

@@ -1,0 +1,58 @@
+--- superficie-0.7.2/gnome/Makefile.am.orig	Sun Mar 26 10:43:30 2000
++++ superficie-0.7.2/gnome/Makefile.am	Wed Jul  9 12:55:16 2003
+@@ -42,7 +42,7 @@
+ 	@GNOMEUI_LIBS@ 			\
+         @GTKGL_LIBS@   			\
+         $(SUP_LIBS)/libsuperficie.a  	\
+-##        $(INTLLIBS) 			\
++        -lOSMesa 			\
+         $(GNOME_XML_LIB) -lglut -lXmu -lXext -lXi
+ 
+ #CXXFLAGS =  -g -fpermissive 
+@@ -50,7 +50,7 @@
+ 
+ 
+ INCLUDES = -I$(includedir) -I$(SUP_INC) -I$(GLP_INC) \
+-	`gtk-config --cflags gthread` @GTKGL_CFLAGS@ @GNOME_INCLUDEDIR@ \
++	`gtk-config --cflags gthread` `libglade-config --cflags` @GTKGL_CFLAGS@ @GNOME_INCLUDEDIR@ \
+         -DG_LOG_DOMAIN=\"Superficie\" -DGNOMELOCALEDIR=\""$(datadir)/locale"\" \
+         -I../intl -I$(top_srcdir)/intl  `xml-config --cflags`
+ 
+--- superficie-0.7.2/doc/C/Makefile.am.orig	Tue Jan 18 08:26:08 2000
++++ superficie-0.7.2/doc/C/Makefile.am	Wed Jul  9 13:25:53 2003
+@@ -34,13 +34,13 @@
+ 
+ 
+ install-data-local: superficie.html
+-	$(mkinstalldirs) $(superficie_helpdir)/images
++	$(mkinstalldirs) $(DESTDIR)$(superficie_helpdir)/images
+ 	-for file in $(srcdir)/superficie/*.html $(srcdir)/superficie/*.css; do \
+ 	basefile=`basename $$file`; \
+-	$(INSTALL_DATA) $$file $(superficie_helpdir)/$$basefile; \
++	$(INSTALL_DATA) $$file $(DESTDIR)$(superficie_helpdir)/$$basefile; \
+ 	done
+ 	-for file in $(srcdir)/images/*.jpg $(srcdir)/images/*.gif; do \
+-	$(INSTALL_DATA) $$file $(superficie_helpdir)/images;\
++	$(INSTALL_DATA) $$file $(DESTDIR)$(superficie_helpdir)/images;\
+ 	done
+ 
+ 
+--- superficie-0.7.2/doc/es/Makefile.am.orig	Tue Jan 18 08:26:22 2000
++++ superficie-0.7.2/doc/es/Makefile.am	Wed Jul  9 13:26:26 2003
+@@ -33,13 +33,13 @@
+ 
+ 
+ install-data-local: superficie.html
+-	$(mkinstalldirs) $(superficie_helpdir)/images
++	$(mkinstalldirs) $(DESTDIR)$(superficie_helpdir)/images
+ 	-for file in $(srcdir)/superficie/*.html $(srcdir)/superficie/*.css; do \
+ 	basefile=`basename $$file`; \
+-	$(INSTALL_DATA) $$file $(superficie_helpdir)/$$basefile; \
++	$(INSTALL_DATA) $$file $(DESTDIR)$(superficie_helpdir)/$$basefile; \
+ 	done
+ 	-for file in $(srcdir)/images/*.jpg $(srcdir)/images/*.gif; do \
+-	$(INSTALL_DATA) $$file $(superficie_helpdir)/images;\
++	$(INSTALL_DATA) $$file $(DESTDIR)$(superficie_helpdir)/images;\
+ 	done
+ 
+ 

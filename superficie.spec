@@ -37,14 +37,12 @@ rpm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
-gzip -9nf README README.save_eps NEWS AUTHORS ChangeLog doc/data.ps
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz doc/*.gz
+%doc README README.save_eps NEWS AUTHORS ChangeLog doc/data.ps
 %attr(755,root,root) %{_bindir}/*
 %{_applnkdir}/Graphics/superficie.desktop
 %{_datadir}/gnome/help/superficie

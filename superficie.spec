@@ -46,5 +46,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 %{_datadir}/gnome/apps/Graphics/superficie.desktop
 %{_datadir}/gnome/help/superficie
-%{_datadir}/pixmaps/*
+%{_pixmapsdir}/*
 %{_datadir}/superficie

@@ -8,7 +8,7 @@ Group(pl):	Aplikacje/Grafika
 Source0:	http://www.linuxsupportline.com/~superficie/%{name}-%{version}.tar.gz
 BuildRequires:	gnome-libs-devel >= 1.0.0
 URL:		http://www.linuxsupportline.com/~superficie/
-BuildRoot:	/tmp/%{name}-%{version}-root
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_prefix		/usr/X11R6
 

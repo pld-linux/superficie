@@ -1,0 +1,538 @@
+--- superficie-0.7.2/libsuperficie/surface.cc.orig	Wed Jan 26 01:13:33 2000
++++ superficie-0.7.2/libsuperficie/surface.cc	Wed Jul  9 12:52:55 2003
+@@ -19,6 +19,7 @@
+ #include "read_data.h"
+ #include <strstream>
+ 
++using namespace std;
+ 
+ Surface::Surface() {
+     _type = QUADS;
+@@ -68,7 +69,7 @@
+ Surface::draw_faces(void)
+ {
+     glDrawElements(GL_QUADS, _quad_index.size(),
+-                   GL_UNSIGNED_INT,_quad_index.begin());
++                   GL_UNSIGNED_INT,_quad_index.begin().base());
+ }
+ 
+ 
+@@ -76,35 +77,35 @@
+ Surface::draw_edges(void)
+ {
+     glDrawElements(GL_QUADS, _quad_index.size(),
+-                   GL_UNSIGNED_INT,_quad_index.begin());
++                   GL_UNSIGNED_INT,_quad_index.begin().base());
+ }
+ 
+ void
+ Surface::draw_mesh(void)
+ {
+     glDrawElements(GL_QUADS, _quad_index.size(),
+-                   GL_UNSIGNED_INT,_quad_index.begin());
++                   GL_UNSIGNED_INT,_quad_index.begin().base());
+ }
+ 
+ void
+ Surface::draw_lines(void)
+ {
+     glDrawElements(GL_QUADS, _quad_index.size(),
+-                   GL_UNSIGNED_INT,_quad_index.begin());
++                   GL_UNSIGNED_INT,_quad_index.begin().base());
+ }
+ 
+ void
+ Surface::draw_vlines(void)
+ {
+     glDrawElements(GL_LINES, _quad_index.size(),
+-                   GL_UNSIGNED_INT,_quad_index.begin());
++                   GL_UNSIGNED_INT,_quad_index.begin().base());
+ }
+ 
+ void
+ Surface::draw_hlines(void)
+ {
+     glDrawElements(GL_LINES, _quad_index.size(),
+-                   GL_UNSIGNED_INT,_hline_index.begin());
++                   GL_UNSIGNED_INT,_hline_index.begin().base());
+ }
+ 
+ /*
+--- superficie-0.7.2/libsuperficie/util.h.orig	Sun Feb 27 00:41:45 2000
++++ superficie-0.7.2/libsuperficie/util.h	Wed Jul  9 12:19:01 2003
+@@ -82,7 +82,7 @@
+ 
+ void generate_default_colors(gfloat* color_array, const gfloat* vertex_array, const gint array_length);
+ void generate_default_colors(VectorArray<gfloat> & color, VectorArray<gfloat> & vertex);
+-gboolean check_index_ok(VectorArray<gfloat> & array, vector<guint> & index);
++gboolean check_index_ok(VectorArray<gfloat> & array, std::vector<guint> & index);
+ 
+ void   normalize(gfloat* vec                                               );
+ void   times    (gfloat* output,   const gfloat* vec, const gfloat escalar );
+--- superficie-0.7.2/libsuperficie/lights.h.orig	Fri Dec 10 20:51:25 1999
++++ superficie-0.7.2/libsuperficie/lights.h	Wed Jul  9 12:19:37 2003
+@@ -31,7 +31,7 @@
+ 
+ class SceneLights {
+ 
+-    deque<SLight> _slights;
++    std::deque<SLight> _slights;
+     typeof(GL_LIGHT0) * S_GL_LIGHTS;
+ 
+ public:
+@@ -58,7 +58,7 @@
+     void update_all();
+     void push_back ();
+ 
+-    deque<SLight> & slights () { return _slights; }
++    std::deque<SLight> & slights () { return _slights; }
+     void make_defaults();
+     gboolean some_active();
+     gint size() { return _slights.size(); }
+@@ -71,4 +71,4 @@
+ };
+ 
+ 
+-#endif
+\ No newline at end of file
++#endif
+--- superficie-0.7.2/libsuperficie/base_object.h.orig	Sat Feb 26 18:35:49 2000
++++ superficie-0.7.2/libsuperficie/base_object.h	Wed Jul  9 12:20:43 2003
+@@ -34,11 +34,11 @@
+ 
+ 
+ 
+-typedef deque<GNode*> GnodeList;
++typedef std::deque<GNode*> GnodeList;
+ 
+ typedef GnodeList::iterator                Iter;
+ typedef GnodeList::reverse_iterator       rIter;
+-typedef deque<Transformations>::iterator trIter;
++typedef std::deque<Transformations>::iterator trIter;
+ 
+ 
+ // This class maintains the geometry and certain state variables
+@@ -52,7 +52,7 @@
+ protected:
+ 
+     SMaterial           _material;
+-    string                  _name;
++    std::string             _name;
+     GLubyte*   _transparent_array;
+ 
+     VIRTUAL_ATTRIBUTE(smooth,          gboolean);     
+@@ -108,10 +108,10 @@
+ 
+     virtual void delete_empty_transformations() {}
+ 
+-    void name                    (gchar* str) { _name = string(str ? str : ""); }
++    void name                    (gchar* str) { _name = std::string(str ? str : ""); }
+     void transparent_array       (gint n)     { _transparent_array = patron[n]; }
+     const gchar *name            ()           { return _name.c_str();           }
+-    string       name_string     ()           { return _name; }
++    std::string  name_string     ()           { return _name; }
+ 
+     guint depth(void) { return g_node_depth(_gnode); }
+     BaseObject * parent() { return BASE_OBJECT(_gnode->parent); }
+--- superficie-0.7.2/libsuperficie/object.h.orig	Sun Feb 27 04:08:09 2000
++++ superficie-0.7.2/libsuperficie/object.h	Wed Jul  9 12:21:48 2003
+@@ -33,7 +33,7 @@
+ {
+     friend class Scene;
+     friend class Multiple;
+-    friend gboolean _lastquat(GNode * gnode, pair<GNode*, gfloat*> * data);
++    friend gboolean _lastquat(GNode * gnode, std::pair<GNode*, gfloat*> * data);
+ 
+ 
+ protected:
+@@ -41,9 +41,9 @@
+     VectorArray<gfloat> _vertex;
+     VectorArray<gfloat> _color;
+ 
+-    deque<Transformations> _trans;
++    std::deque<Transformations> _trans;
+     // the bboxes in the coordinates of each parent
+-    deque< SVector<6> >   _bboxes;
++    std::deque< SVector<6> >   _bboxes;
+ 
+     static PolygonMode _polygon_mode_up;
+     static PolygonMode _polygon_mode_down;
+@@ -76,8 +76,8 @@
+     GNode* moving_some_parent();
+     gboolean some_parent_idle(GnodeList & idle_parents);
+ 
+-    deque<Transformations> & trans () { return _trans;  }
+-    deque< SVector<6> >    & bboxes() { return _bboxes; }
++    std::deque<Transformations> & trans () { return _trans;  }
++    std::deque< SVector<6> >    & bboxes() { return _bboxes; }
+ 
+     void apply_transformations   ();
+     void local_to_scene(GNode* parent, gfloat* p, gfloat* pp);
+--- superficie-0.7.2/libsuperficie/read_data.h.orig	Fri Dec 10 20:29:27 1999
++++ superficie-0.7.2/libsuperficie/read_data.h	Wed Jul  9 12:22:39 2003
+@@ -28,12 +28,12 @@
+ gint read_point_from_stream     (FILE* fp, gfloat* array );
+ gint read_array_from_stream(FILE* fp, gchar* key, gint* array_length, gfloat** array);
+ gint read_array_from_stream(FILE* fp, gchar* key, gint* array_length, guint** array);
+-gint read_array_from_stream(FILE* fp, gchar* key, vector<guint> & array);
++gint read_array_from_stream(FILE* fp, gchar* key, std::vector<guint> & array);
+ gint read_array_from_stream(FILE* fp, gchar* key, VectorArray<gfloat> & array);
+ 
+ 
+ void parse_array(VectorArray<gfloat> & array, gchar * data, gchar * length);
+-void parse_array(vector<guint> & array,       gchar * data, gchar * length);
++void parse_array(std::vector<guint> & array,  gchar * data, gchar * length);
+ gint get_word(gchar * data, guint & data_pos, gchar * word);
+ 
+ #endif
+--- superficie-0.7.2/libsuperficie/multiple.cc.orig	Tue Feb 29 04:20:00 2000
++++ superficie-0.7.2/libsuperficie/multiple.cc	Wed Jul  9 12:23:06 2003
+@@ -29,6 +29,8 @@
+ #include <algo.h>
+ #include <pair.h>
+ 
++using namespace std;
++
+ // static members
+ // ···········································
+ 
+--- superficie-0.7.2/libsuperficie/lights.cc.orig	Sat Feb 12 04:52:13 2000
++++ superficie-0.7.2/libsuperficie/lights.cc	Wed Jul  9 12:23:52 2003
+@@ -17,6 +17,8 @@
+ 
+ #include <lights.h>
+ 
++using namespace std;
++
+ static typeof(GL_LIGHT0) _tmp_gl_lights[8] = {
+     GL_LIGHT0, GL_LIGHT1, GL_LIGHT2, GL_LIGHT3, GL_LIGHT4,
+     GL_LIGHT5, GL_LIGHT6, GL_LIGHT7
+--- superficie-0.7.2/libsuperficie/object.cc.orig	Sun Feb 27 06:01:13 2000
++++ superficie-0.7.2/libsuperficie/object.cc	Wed Jul  9 12:24:15 2003
+@@ -26,6 +26,7 @@
+ #include <string.h>
+ #include <GL/gl.h>
+ 
++using namespace std;
+ 
+ PolygonMode Object::_polygon_mode_down = POLY_NONE;
+ 
+--- superficie-0.7.2/libsuperficie/polygon.h.orig	Fri Jan 28 05:51:56 2000
++++ superficie-0.7.2/libsuperficie/polygon.h	Wed Jul  9 12:25:08 2003
+@@ -25,7 +25,7 @@
+ 
+ class Polygon : public Object
+ {
+-    vector<guint>         _index;
++    std::vector<guint>    _index;
+     VectorArray<gfloat>  _normal;
+     VectorArray<gfloat> _tangente;
+     
+--- superficie-0.7.2/libsuperficie/polygon.cc.orig	Wed Jan 26 01:17:23 2000
++++ superficie-0.7.2/libsuperficie/polygon.cc	Wed Jul  9 12:45:05 2003
+@@ -96,7 +96,7 @@
+     /* This will obscure the frame */
+     if( smooth_edges() ) {
+         glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+-        glDrawElements(GL_POLYGON, _index.size(), GL_UNSIGNED_INT, _index.begin());
++        glDrawElements(GL_POLYGON, _index.size(), GL_UNSIGNED_INT, _index.begin().base());
+     }
+ 
+ 
+@@ -135,7 +135,7 @@
+         }
+ 
+         glLineWidth (frame_line_width());
+-        glDrawElements(GL_POLYGON, _index.size(), GL_UNSIGNED_INT, _index.begin());
++        glDrawElements(GL_POLYGON, _index.size(), GL_UNSIGNED_INT, _index.begin().base());
+ 
+         //glPopAttrib();
+ 
+@@ -195,13 +195,13 @@
+ {
+     //TODO: fix this!!!
+     static guint _loaded = 0;
+-    ostrstream n;
++    std::ostrstream n;
+     n << "polygon" << _loaded++ << ends;
+     _name = n.str();
+     n.freeze(0);
+     //
+ 
+-    _index = vector<guint>(_vertex.size());
++    _index = std::vector<guint>(_vertex.size());
+     _for_each(i, _index.size(), _index[i] = i;);
+     _tangente = _normal = VectorArray<gfloat>(_vertex.size());
+     generate_normal_vectors();
+--- superficie-0.7.2/libsuperficie/point.cc.orig	Fri Jan 28 05:49:27 2000
++++ superficie-0.7.2/libsuperficie/point.cc	Wed Jul  9 12:47:02 2003
+@@ -23,6 +23,8 @@
+ #include <GL/gl.h>
+ #include <strstream>
+ 
++using namespace std;
++
+ Point::Point()
+ {
+     _type  = POINT;
+@@ -69,7 +71,7 @@
+     glPointSize(lines_width ());
+ 
+     glDrawElements(GL_POINTS, _index.size(),
+-                   GL_UNSIGNED_INT, (guint*) _index.begin());
++                   GL_UNSIGNED_INT, (guint*) _index.begin().base());
+ 
+     if( smooth_edges() ) {
+         glDisable (GL_POINT_SMOOTH);
+--- superficie-0.7.2/libsuperficie/read_data.cc.orig	Mon Mar 13 06:06:26 2000
++++ superficie-0.7.2/libsuperficie/read_data.cc	Wed Jul  9 12:47:22 2003
+@@ -28,6 +28,7 @@
+ #include <ctype.h>
+ #include <setjmp.h>
+ 
++using namespace std;
+ 
+ /*
+ gint read_word_from_stream(ifstream & source, gchar* word_tmp)
+--- superficie-0.7.2/libsuperficie/surface.h.orig	Wed Jan 19 10:04:15 2000
++++ superficie-0.7.2/libsuperficie/surface.h	Wed Jul  9 12:48:56 2003
+@@ -27,8 +27,8 @@
+ 
+ class Surface : public Triangles
+ {
+-    vector<guint> _quad_index;
+-    vector<guint> _hline_index;
++    std::vector<guint> _quad_index;
++    std::vector<guint> _hline_index;
+ 
+     void split_quads();
+ 
+--- superficie-0.7.2/libsuperficie/scene.cc.orig	Sun Mar 26 04:55:18 2000
++++ superficie-0.7.2/libsuperficie/scene.cc	Wed Jul  9 12:49:22 2003
+@@ -32,6 +32,7 @@
+ 
+ #include <setjmp.h>
+ 
++using namespace std;
+ jmp_buf main_loop;
+ thread_message t_message;
+ 
+--- superficie-0.7.2/libsuperficie/triangles.cc.orig	Wed Jan 26 01:13:05 2000
++++ superficie-0.7.2/libsuperficie/triangles.cc	Wed Jul  9 12:51:48 2003
+@@ -43,7 +43,7 @@
+  */
+ 
+ gint
+-Triangles::find_triangles_contaning(guint i, vector<guint> & lista)
++Triangles::find_triangles_contaning(guint i, std::vector<guint> & lista)
+ {
+     gint n=0, k=0;
+ 
+@@ -72,7 +72,7 @@
+ 
+     // TODO: optimize this function.
+     gint t_found;
+-    vector<guint> lista(_vertex.size());;
++    std::vector<guint> lista(_vertex.size());;
+     t_message.triangle_total = _vertex.size();
+ 
+     for(gint i=0; i < _vertex.size(); i++) {
+@@ -166,7 +166,7 @@
+ {
+     //TODO: fix this!!!
+     static guint _loaded = 0;
+-    ostrstream n;
++    std::ostrstream n;
+     n << "triangles" << _loaded++ << ends;
+     _name = n.str();
+     n.freeze(0);
+@@ -187,7 +187,7 @@
+ Triangles::draw_faces(void)
+ {
+     glDrawElements(GL_TRIANGLES,   _index.size(),
+-                   GL_UNSIGNED_INT, _index.begin());
++                   GL_UNSIGNED_INT, _index.begin().base());
+ }
+ 
+ 
+@@ -195,35 +195,35 @@
+ Triangles::draw_edges(void)
+ {
+     glDrawElements(GL_TRIANGLES,   _index.size(),
+-                   GL_UNSIGNED_INT, _index.begin());
++                   GL_UNSIGNED_INT, _index.begin().base());
+ }
+ 
+ void
+ Triangles::draw_mesh(void)
+ {
+     glDrawElements(GL_TRIANGLES,   _index.size(),
+-                   GL_UNSIGNED_INT, _index.begin());
++                   GL_UNSIGNED_INT, _index.begin().base());
+ }
+ 
+ void
+ Triangles::draw_lines(void)
+ {
+     glDrawElements(GL_TRIANGLES,   _index.size(),
+-                   GL_UNSIGNED_INT, _index.begin());
++                   GL_UNSIGNED_INT, _index.begin().base());
+ }
+ 
+ void
+ Triangles::draw_vlines(void)
+ {
+     glDrawElements(GL_TRIANGLES,   _index.size(),
+-                   GL_UNSIGNED_INT, _index.begin());
++                   GL_UNSIGNED_INT, _index.begin().base());
+ }
+ 
+ void
+ Triangles::draw_hlines(void)
+ {
+     glDrawElements(GL_TRIANGLES,   _index.size(),
+-                   GL_UNSIGNED_INT, _index.begin());
++                   GL_UNSIGNED_INT, _index.begin().base());
+ }
+ 
+ void
+--- superficie-0.7.2/libsuperficie/line.h.orig	Tue Jan 25 08:34:44 2000
++++ superficie-0.7.2/libsuperficie/line.h	Wed Jul  9 12:45:37 2003
+@@ -24,7 +24,7 @@
+ 
+ class Line : public Object
+ {
+-    vector<guint> _index;
++    std::vector<guint> _index;
+     gboolean      _array;
+ 
+ public:
+--- superficie-0.7.2/libsuperficie/line.cc.orig	Wed Jan 19 10:03:01 2000
++++ superficie-0.7.2/libsuperficie/line.cc	Wed Jul  9 12:46:08 2003
+@@ -23,6 +23,8 @@
+ #include <GL/gl.h>
+ #include <strstream>
+ 
++using namespace std;
++
+ Line::Line(gboolean array)
+ {
+     _type  = LINE;
+@@ -83,7 +85,7 @@
+     glLineWidth (lines_width ());
+ 
+     glDrawElements( _array ? GL_LINES : GL_LINE_STRIP,
+-                    _index.size(), GL_UNSIGNED_INT, _index.begin() );
++                    _index.size(), GL_UNSIGNED_INT, _index.begin().base() );
+ 
+     if( smooth_lines() ) {
+         glDisable (GL_LINE_SMOOTH);
+--- superficie-0.7.2/libsuperficie/point.h.orig	Fri Jan 28 05:49:39 2000
++++ superficie-0.7.2/libsuperficie/point.h	Wed Jul  9 12:46:32 2003
+@@ -27,7 +27,7 @@
+ class Point : public Object
+ {
+ 
+-    vector<guint> _index;
++    std::vector<guint> _index;
+ 
+ public:
+     
+--- superficie-0.7.2/libsuperficie/triangles.h.orig	Wed Jan 19 10:03:50 2000
++++ superficie-0.7.2/libsuperficie/triangles.h	Wed Jul  9 12:48:20 2003
+@@ -30,7 +30,7 @@
+ class Triangles : public Object
+ {
+ protected:
+-    vector<guint>                 _index;
++    std::vector<guint>            _index;
+     VectorArray<gfloat>          _normal;
+     VectorArray<gfloat> _triangle_normal;
+     VectorArray<gfloat>        _tangente;
+@@ -44,7 +44,7 @@
+     virtual void draw_hlines(void);
+     virtual void draw_lines (void);
+ 
+-    gint find_triangles_contaning(guint i, vector<guint> & lista);
++    gint find_triangles_contaning(guint i, std::vector<guint> & lista);
+ 
+ public:
+     Triangles();
+@@ -64,7 +64,7 @@
+     /* Find a better name for this */
+     void                abort   ()   { t_message.abort_loading = TRUE; }
+ 
+-    guint *             index   ()   { return _index.begin();  }
++    guint *             index   ()   { return _index.begin().base();  }
+     gint                index_size() { return _index.size();   }
+     gfloat *            tangente  () { return _tangente.ptr(); }
+ };
+--- superficie-0.7.2/libsuperficie/util.cc.orig	Sun Mar 26 05:13:28 2000
++++ superficie-0.7.2/libsuperficie/util.cc	Wed Jul  9 12:53:46 2003
+@@ -394,11 +394,11 @@
+ }
+ 
+ gboolean
+-check_index_ok(VectorArray<gfloat> & array, vector<guint> & index)
++check_index_ok(VectorArray<gfloat> & array, std::vector<guint> & index)
+ {
+     gfloat max_index = 0;
+ 
+-    max_index = max(index.begin(), index.size());
++    max_index = max(index.begin().base(), index.size());
+ 
+     if( max_index >= array.size() )
+         return FALSE;
+--- superficie-0.7.2/gnome/superficie.cc.orig	Wed Jan 26 08:14:38 2000
++++ superficie-0.7.2/gnome/superficie.cc	Wed Jul  9 13:03:41 2003
+@@ -52,6 +52,7 @@
+ 
+ #include <iostream>
+ 
++using namespace std;
+ 
+ // ---------------- Global Objects  ---------------------- //
+ 
+--- superficie-0.7.2/gnome/main-window.cc.orig	Sat Feb 12 05:12:44 2000
++++ superficie-0.7.2/gnome/main-window.cc	Wed Jul  9 13:08:19 2003
+@@ -41,6 +41,8 @@
+ #include <strstream>
+ #include <libgnome/gnome-history.h>
+ 
++using namespace std;
++
+ const gchar *authors[] = {
+     "Juan Pablo Romero Méndez",
+     NULL
+--- superficie-0.7.2/gnome/dialog-object-properties.cc.orig	Sat Feb 12 05:42:26 2000
++++ superficie-0.7.2/gnome/dialog-object-properties.cc	Wed Jul  9 13:08:56 2003
+@@ -38,6 +38,8 @@
+         #include <config.h>
+ #endif
+ 
++using namespace std;
++
+ static GtkWidget *    _ctree;
+ static GtkCTreeNode * _parent        = NULL;
+ 
+--- superficie-0.7.2/gnome/dialog-scene-properties.cc.orig	Wed Jan 26 02:49:48 2000
++++ superficie-0.7.2/gnome/dialog-scene-properties.cc	Wed Jul  9 13:09:29 2003
+@@ -58,6 +58,8 @@
+ #include <deque>
+ #include <strstream>
+ 
++using namespace std;
++
+ static deque<GtkWidget*> gtklights;
+ static gboolean up_down_linked = TRUE;
+ static void properties_init();
+--- superficie-0.7.2/gnome/dialog-save-as.cc.orig	Sun Mar 26 09:40:22 2000
++++ superficie-0.7.2/gnome/dialog-save-as.cc	Wed Jul  9 13:10:09 2003
+@@ -32,6 +32,7 @@
+ #include <GL/osmesa.h>
+ #include <GL/glut.h>
+ 
++using namespace std;
+ 
+ static enum { PS, FIG, SKETCH, USE_EXTENSION } save_file_as = PS;
+ 

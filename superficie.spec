@@ -4,6 +4,7 @@ Version:	0.7.2
 Release:	1
 License:	GPL
 Group:		Applications/Graphics
+Group(de):	Applikationen/Grafik
 Group(pl):	Aplikacje/Grafika
 Source0:	http://www.linuxsupportline.com/~superficie/%{name}-%{version}.tar.gz
 BuildRequires:	gnome-libs-devel >= 1.0.0
@@ -14,21 +15,20 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description 
 Superficie is a small program that allows to visualize 3D surfaces and
-other objects, and to manipulate them. It allows to rotate, to move away,
-to show illumination, etc. on the surface at issue.
+other objects, and to manipulate them. It allows to rotate, to move
+away, to show illumination, etc. on the surface at issue.
 
 %prep
 %setup -q
 
 %build
-CXXFLAGS="$RPM_OPT_FLAGS -fpermissive -fno-exceptions"
-LDFLAGS="-s"
-export CXXFLAGS LDFLAGS
+CXXFLAGS="%{rpmcflags} -fpermissive -fno-exceptions"
 %configure
 
 %{__make}
 
 %install
+rm -rf $RPM_BUILD_ROOT
 rpm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
@@ -40,11 +40,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files 
 %defattr(644,root,root,755)
-
 %doc *.gz doc/*.gz
 
-%{_bindir}/*
-%{_datadir}/gnome/apps/Graphics/superficie.desktop
+%attr(755,root,root) %{_bindir}/*
+%{_applnkdir}/Graphics/superficie.desktop
 %{_datadir}/gnome/help/superficie
 %{_pixmapsdir}/*
 %{_datadir}/superficie

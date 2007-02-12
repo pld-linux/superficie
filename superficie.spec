@@ -1,5 +1,5 @@
 Summary:	3D objects visualizer
-Summary(pl):	Wizualizer obiektów 3D
+Summary(pl.UTF-8):   Wizualizer obiektÃ³w 3D
 Name:		superficie
 Version:	0.7.2
 Release:	1
@@ -24,10 +24,10 @@ Superficie is a small program that allows to visualize 3D surfaces and
 other objects, and to manipulate them. It allows to rotate, to move
 away, to show illumination, etc. on the surface at issue.
 
-%description -l pl
-Superficie to niewielki program pozwalaj±cy wizualizowaæ powierzchnie
-3D i inne obiekty, oraz manipulowaæ nimi. Pozwala obracaæ, przesuwaæ,
-pokazywaæ o¶wietlenie itp. na powierzchni.
+%description -l pl.UTF-8
+Superficie to niewielki program pozwalajÄ…cy wizualizowaÄ‡ powierzchnie
+3D i inne obiekty, oraz manipulowaÄ‡ nimi. Pozwala obracaÄ‡, przesuwaÄ‡,
+pokazywaÄ‡ oÅ›wietlenie itp. na powierzchni.
 
 %prep
 %setup -q

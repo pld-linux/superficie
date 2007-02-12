@@ -1,5 +1,5 @@
 Summary:	3D objects visualizer
-Summary(pl.UTF-8):   Wizualizer obiektów 3D
+Summary(pl.UTF-8):	Wizualizer obiektów 3D
 Name:		superficie
 Version:	0.7.2
 Release:	1
